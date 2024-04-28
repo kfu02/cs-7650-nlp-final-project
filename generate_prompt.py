@@ -10,7 +10,7 @@ def generate_table_example(table, interpretation):
 
 def build_preamble():
     # TODO: build another preamble for the raw tables
-    prompt = 'You will be presented with a table of data derived from a robot team where each robot has attempted to learn a policy to navigate near its goal zone without colliding with another robot. ' + \
+    prompt = 'You will be presented with a table of data derived from observing a robot team. Each robot has attempted to learn a policy to navigate near its goal zone without colliding with another robot. ' + \
             'This data is collected over a series of timesteps (denoted under the "timestep" column). ' + \
             '\n\n' + \
             'A value of 3.4 under "r0-r1 distance" means that at that timestep, robot 0 and robot 1 are 3.4 meters apart. Thus, you can assume that any value less than 0 here means these two robots have collided. ' + \
