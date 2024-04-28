@@ -3,6 +3,9 @@ import re
 import pprint
 import sys
 
+def compute_dist(x1, y1, x2, y2):
+    return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+
 def read_file(input_filename):
     with open(input_filename, 'r') as file:
         raw_log = file.read()
@@ -62,7 +65,7 @@ def compute_interagent_dist(obs1, obs2):
 
     ROBOT_RADIUS = 0.1
 
-    return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2) - 2*ROBOT_RADIUS
+    return compute_dist(x1, y1, x2, y2) - 2*ROBOT_RADIUS
 
 def find_all_dists(all_obs):
     """
@@ -87,18 +90,27 @@ def find_all_vels(all_obs):
 
     return r0_vel, r1_vel, r2_vel
 
-def find_all_rel_goals(all_obs):
+def find_all_dist_to_goals(all_obs):
     """
     Given observations from all 3 agents, find all goal positions
 
     obs: [p_x, p_y, v_x, v_y, rel_goal_x, rel_goal_y]
     """
-    # TODO: replace with dist to goal?
     r0_goal = all_obs[0][-2:]
     r1_goal = all_obs[1][-2:]
     r2_goal = all_obs[2][-2:]
 
-    return r0_goal, r1_goal, r2_goal
+    r0_pos = all_obs[0][:2]
+    r1_pos = all_obs[1][:2]
+    r2_pos = all_obs[2][:2]
+
+    # since goals are defined as relative to agent already,
+    # we simply need to compute dist from (0, 0)
+    r0_dist_to_goal = compute_dist(r0_goal[0], r0_goal[1], 0, 0)
+    r1_dist_to_goal = compute_dist(r1_goal[0], r1_goal[1], 0, 0)
+    r2_dist_to_goal = compute_dist(r2_goal[0], r2_goal[1], 0, 0)
+
+    return r0_dist_to_goal, r1_dist_to_goal, r2_dist_to_goal
 
 def generate_filtered_table(input_filename, output_filename):
     """
@@ -109,7 +121,7 @@ def generate_filtered_table(input_filename, output_filename):
     log_dict = create_dict_from_log(input_filename)
     # pprint.pp(log_dict, width=120)
     semistructured_table = "timestep | " + \
-                           "r0 goal | r1 goal | r2 goal | " + \
+                           "r0 dist to goal | r1 dist to goal | r2 dist to goal | " + \
                            "r0 vel | r1 vel | r2 vel | " + \
                            "r0-r1 attention | r0-r2 attention | r1-r0 attention | r1-r2 attention | r2-r0 attention | r2-r1 attention | " + \
                            "r0-r1 distance | r0-r2 distance | r1-r2 distance\n"
@@ -118,9 +130,8 @@ def generate_filtered_table(input_filename, output_filename):
        row = f"{iter} | "
        all_obs = info['obs']
 
-       for goal in find_all_rel_goals(all_obs):
-           # TODO: split into x/y?
-           row += f"{goal} | "
+       for dist_to_goal in find_all_dist_to_goals(all_obs):
+           row += f"{dist_to_goal} | "
 
        for vel in find_all_vels(all_obs):
            # TODO: split into x/y?
