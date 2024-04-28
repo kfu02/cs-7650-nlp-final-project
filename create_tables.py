@@ -3,6 +3,10 @@ import re
 import pprint
 import sys
 
+
+ROBOT_RADIUS = 0.1
+SAFETY_FACTOR = 0.2 * ROBOT_RADIUS
+
 def compute_dist(x1, y1, x2, y2):
     return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
@@ -63,9 +67,7 @@ def compute_interagent_dist(obs1, obs2):
     x2 = obs2[0]
     y2 = obs2[1]
 
-    ROBOT_RADIUS = 0.1
-
-    return compute_dist(x1, y1, x2, y2) - 2*ROBOT_RADIUS
+    return compute_dist(x1, y1, x2, y2) - 2*ROBOT_RADIUS - SAFETY_FACTOR
 
 def find_all_dists(all_obs):
     """
@@ -122,7 +124,6 @@ def generate_filtered_table(input_filename, output_filename):
     # pprint.pp(log_dict, width=120)
     semistructured_table = "timestep | " + \
                            "r0 dist to goal | r1 dist to goal | r2 dist to goal | " + \
-                           "r0 vel | r1 vel | r2 vel | " + \
                            "r0-r1 attention | r0-r2 attention | r1-r0 attention | r1-r2 attention | r2-r0 attention | r2-r1 attention | " + \
                            "r0-r1 distance | r0-r2 distance | r1-r2 distance\n"
 
@@ -133,9 +134,10 @@ def generate_filtered_table(input_filename, output_filename):
        for dist_to_goal in find_all_dist_to_goals(all_obs):
            row += f"{dist_to_goal} | "
 
-       for vel in find_all_vels(all_obs):
-           # TODO: split into x/y?
-           row += f"{vel} | "
+       # "r0 vel | r1 vel | r2 vel | " + \
+       # for vel in find_all_vels(all_obs):
+       #     # TODO: split into x/y?
+       #     row += f"{vel} | "
 
        for edge_weight in info['edge_weights']:
            row += f"{edge_weight} | "

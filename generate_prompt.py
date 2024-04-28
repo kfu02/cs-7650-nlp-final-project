@@ -9,6 +9,7 @@ def generate_table_example(table, interpretation):
     return prompt
 
 def build_preamble():
+    # TODO: build another preamble for the raw tables
     prompt = 'You will be presented with a table of data derived from a robot team where each robot has attempted to learn a policy to navigate to its goal without colliding with another robot. ' + \
             'This data is collected over a series of timesteps (denoted under the "timestep" column). ' + \
             '\n\n' + \
@@ -31,7 +32,7 @@ def build_preamble():
     return prompt
 
 def build_prompt(new_table):
-    # add instructions + few-shot learning examples
+    # add instructions
     prompt = build_preamble()
 
     # add actual data to analyze
@@ -52,7 +53,7 @@ def main():
 
     # fill in prompt
     prompt = build_prompt(table)
-    print(prompt)
+    # print(prompt)
 
     # save to file
     with open(f'{input_filename}-prompt.txt', 'w') as f:
