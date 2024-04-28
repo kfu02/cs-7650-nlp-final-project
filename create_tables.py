@@ -6,7 +6,6 @@ import sys
 
 ROBOT_RADIUS = 0.1
 SAFETY_FACTOR = 0.2 * ROBOT_RADIUS
-REACHED_GOAL = 0.15
 
 def compute_dist(x1, y1, x2, y2):
     return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
@@ -109,9 +108,9 @@ def find_all_dist_to_goals(all_obs):
 
     # since goals are defined as relative to agent already,
     # we simply need to compute dist from (0, 0)
-    r0_dist_to_goal = compute_dist(r0_goal[0], r0_goal[1], 0, 0) - REACHED_GOAL
-    r1_dist_to_goal = compute_dist(r1_goal[0], r1_goal[1], 0, 0) - REACHED_GOAL
-    r2_dist_to_goal = compute_dist(r2_goal[0], r2_goal[1], 0, 0) - REACHED_GOAL
+    r0_dist_to_goal = compute_dist(r0_goal[0], r0_goal[1], 0, 0)
+    r1_dist_to_goal = compute_dist(r1_goal[0], r1_goal[1], 0, 0)
+    r2_dist_to_goal = compute_dist(r2_goal[0], r2_goal[1], 0, 0)
 
     return r0_dist_to_goal, r1_dist_to_goal, r2_dist_to_goal
 
@@ -124,27 +123,22 @@ def generate_filtered_table(input_filename, output_filename):
     log_dict = create_dict_from_log(input_filename)
     # pprint.pp(log_dict, width=120)
     semistructured_table = "timestep | " + \
-                           "r0 dist to goal | r1 dist to goal | r2 dist to goal | " + \
+                           "r0-r1 distance | r0-r2 distance | r1-r2 distance\n" + \
                            "r0-r1 attention | r0-r2 attention | r1-r0 attention | r1-r2 attention | r2-r0 attention | r2-r1 attention | " + \
-                           "r0-r1 distance | r0-r2 distance | r1-r2 distance\n"
+                           "r0 dist to goal | r1 dist to goal | r2 dist to goal | "
 
     for iter, info in log_dict.items():
        row = f"{iter} | "
        all_obs = info['obs']
 
-       for dist_to_goal in find_all_dist_to_goals(all_obs):
-           row += f"{dist_to_goal} | "
-
-       # "r0 vel | r1 vel | r2 vel | " + \
-       # for vel in find_all_vels(all_obs):
-       #     # TODO: split into x/y?
-       #     row += f"{vel} | "
+       for dist in find_all_dists(all_obs):
+           row += f"{dist} | "
 
        for edge_weight in info['edge_weights']:
            row += f"{edge_weight} | "
 
-       for dist in find_all_dists(all_obs):
-           row += f"{dist} | "
+       for dist_to_goal in find_all_dist_to_goals(all_obs):
+           row += f"{dist_to_goal} | "
 
        semistructured_table += row + "\n"
 
