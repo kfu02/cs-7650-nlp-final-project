@@ -6,6 +6,7 @@ import sys
 
 ROBOT_RADIUS = 0.1
 SAFETY_FACTOR = 0.2 * ROBOT_RADIUS
+REACHED_GOAL = 0.15
 
 def compute_dist(x1, y1, x2, y2):
     return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
@@ -108,9 +109,9 @@ def find_all_dist_to_goals(all_obs):
 
     # since goals are defined as relative to agent already,
     # we simply need to compute dist from (0, 0)
-    r0_dist_to_goal = compute_dist(r0_goal[0], r0_goal[1], 0, 0)
-    r1_dist_to_goal = compute_dist(r1_goal[0], r1_goal[1], 0, 0)
-    r2_dist_to_goal = compute_dist(r2_goal[0], r2_goal[1], 0, 0)
+    r0_dist_to_goal = compute_dist(r0_goal[0], r0_goal[1], 0, 0) - REACHED_GOAL
+    r1_dist_to_goal = compute_dist(r1_goal[0], r1_goal[1], 0, 0) - REACHED_GOAL
+    r2_dist_to_goal = compute_dist(r2_goal[0], r2_goal[1], 0, 0) - REACHED_GOAL
 
     return r0_dist_to_goal, r1_dist_to_goal, r2_dist_to_goal
 
