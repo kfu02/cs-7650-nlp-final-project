@@ -18,7 +18,7 @@ def build_preamble():
             'A value of 0.5 under "r0 dist to goal" means at that timestep, robot 0 is 0.5 m away from the center of its goal zone. ' + \
             'Similar logic applies to all other pairings of robots. ' + \
             '\n\n' + \
-            'Please interpret the policy’s learned behavior based on the input table. Support your interpretation with data from the table. If you notice that the robots have collided, please highlight this. \n\n'
+            'Please interpret the policy’s learned behavior based on the input table. Support your interpretation with data from the table. If you notice that the robots have collided (meaning a value in one of the robot-robot distance columns is negative), please highlight this. \n\n'
 
     # TODO: add examples here
     # prompt += "Here are some examples of good interpretations:"

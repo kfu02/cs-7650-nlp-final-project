@@ -2,7 +2,7 @@ You will be presented with a table of data derived from observing a robot team. 
 
 A value of 3.4 under "r0-r1 distance" means that at that timestep, robot 0 and robot 1 are 3.4 meters apart. Thus, you can assume that any value less than 0 here means these two robots have collided. A value of 1.0 under "r0-r1 attention" means at that timestep, robot 0 is paying attention to the behavior of robot 1, while a value of 0.0 means it is not. A value of 0.5 under "r0 dist to goal" means at that timestep, robot 0 is 0.5 m away from the center of its goal zone. Similar logic applies to all other pairings of robots. 
 
-Please interpret the policy’s learned behavior based on the input table. Support your interpretation with data from the table. If you notice that the robots have collided, please highlight this. 
+Please interpret the policy’s learned behavior based on the input table. Support your interpretation with data from the table. If you notice that the robots have collided (meaning a value in one of the robot-robot distance columns is negative), please highlight this. 
 
 Here is the input data you must analyze.
 
