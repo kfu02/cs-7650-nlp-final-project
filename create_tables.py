@@ -123,12 +123,12 @@ def generate_filtered_table(input_filename, output_filename):
     log_dict = create_dict_from_log(input_filename)
     # pprint.pp(log_dict, width=120)
     semistructured_table = "timestep | " + \
-                           "r0-r1 distance | r0-r2 distance | r1-r2 distance\n" + \
+                           "r0-r1 distance | r0-r2 distance | r1-r2 distance | " + \
                            "r0-r1 attention | r0-r2 attention | r1-r0 attention | r1-r2 attention | r2-r0 attention | r2-r1 attention | " + \
-                           "r0 dist to goal | r1 dist to goal | r2 dist to goal | "
+                           "r0 dist to goal | r1 dist to goal | r2 dist to goal\n"
 
     for iter, info in log_dict.items():
-       row = f"{iter} | "
+       row = f"{iter+1} | "
        all_obs = info['obs']
 
        for dist in find_all_dists(all_obs):
@@ -140,7 +140,7 @@ def generate_filtered_table(input_filename, output_filename):
        for dist_to_goal in find_all_dist_to_goals(all_obs):
            row += f"{dist_to_goal} | "
 
-       semistructured_table += row + "\n"
+       semistructured_table += row[:-2] + "\n"
 
     with open(output_filename, 'w') as f:
         f.write(semistructured_table)
